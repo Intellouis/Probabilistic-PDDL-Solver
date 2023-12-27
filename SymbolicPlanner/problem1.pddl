@@ -1,0 +1,5 @@
+(define (problem problem1)
+	(:domain blockstacking)
+	(:objects A B C D E F G H)
+	(:init (clear A) (onTable A) (clear B) (onTable B) (clear C) (onTable C) (clear D) (onTable D) (clear E) (onTable E) (clear F) (onTable F) (clear G) (onTable G) (clear H) (onTable H))
+	(:goal (and (on A B) (on B C) (on C D))))
