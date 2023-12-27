@@ -111,7 +111,7 @@ for i in range(1,9):
     for j in range(1,9):
         if i == j:
             continue
-        string = "put_" + str(i) + "_on_" + str(j)
+        string = "put " + str(i) + " on " + str(j)
         actions.append(string)
 #['put_1_on_2', 'put_1_on_3', ..., 'put_2_on_1',...,'put_8_on_7']
         
@@ -181,7 +181,7 @@ def continous_planner(s0, sg):
     Pi = states[0][1]
 
     print(f"Pi: {Pi}")
-    return Pi
+    return Pi[0]
 
 
         
