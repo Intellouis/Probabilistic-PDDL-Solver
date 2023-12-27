@@ -114,7 +114,7 @@ def continous_planner(s0, sg):
                     states.append(s_new)
 
 
-    states = sorted(states, cmp=lambda x,y:cmp(x[0]-distance(x[0],sg),y[0]-distance(y[0],sg)))
+    states = sorted(states, key=lambda x: distance(x[0], sg))
     Pi = states[0][1]
 
 
