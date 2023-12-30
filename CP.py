@@ -84,9 +84,9 @@ def effect(action, index, s_cur, sg):
     assert False, "should not reach here"
     
 
-# action checking function, need to import from environment
-def action_is_available(action, state):
-    return True
+
+
+        
 
 
 
@@ -113,7 +113,7 @@ for i in range(1,9):
             continue
         string = "put " + str(i) + " on " + str(j)
         actions.append(string)
-#['put_1_on_2', 'put_1_on_3', ..., 'put_2_on_1',...,'put_8_on_7']
+#['put 1 on 2', 'put 1 on 3', ..., 'put 2 on 1',...,'put 8 on 7']
         
 
 # get new state s_new = (state_new, action_history[])
@@ -170,11 +170,10 @@ def continous_planner(s0, sg):
 
             action_list = [] 
             for action in actions:
-                if action_is_available(action,s_cur[0]):
-                    action_list.append(action)
-                    p_a = pi_g(action, s_cur[0])
-                    s_new = state_update(action, s_cur, sg)
-                    states.append(s_new)
+                action_list.append(action)
+                p_a = pi_g(action, s_cur[0])
+                s_new = state_update(action, s_cur, sg)
+                states.append(s_new)
 
 
     states = sorted(states, key=lambda x: distance(x[0],sg))
