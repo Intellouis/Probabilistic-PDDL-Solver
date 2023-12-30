@@ -100,7 +100,7 @@ class TextWorld:
                     # On(obj_i, obj_j)
                     obj_i = matrix_state[i][j+1]
                     obj_j = matrix_state[i][j]
-                    idx = self.ij2k(obj_i, obj_j)
+                    idx = self.ij2k(obj_i-1, obj_j-1)  # should be?
                     vector[idx] = 1
                 elif matrix_state[i][j] != 0 and matrix_state[i][j+1] == 0:
                     # Clear(obj_i)

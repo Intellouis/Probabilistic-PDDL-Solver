@@ -143,7 +143,9 @@ def state_update(action, s_cur, sg):
 def continous_planner(s0, sg):
 
     Pi = [] # action list to return
-    layer_num = 15 # layer number of search
+    layer_num = 8 # layer number of search
+    cutting_num = 5
+
     states = [] # states list of current layer
     states.append((s0,[])) # (s_cur, action_history[])
     finished = False # searching finished
@@ -156,8 +158,8 @@ def continous_planner(s0, sg):
 
         # cutting
         states = sorted(states, key=lambda x: distance(x[0],sg))
-        if len(states) >= 3:
-            states = copy.deepcopy(states[:3])
+        if len(states) >= cutting_num:
+            states = copy.deepcopy(states[:cutting_num])
         length = len(states)
         
         for k in range(0,length):
