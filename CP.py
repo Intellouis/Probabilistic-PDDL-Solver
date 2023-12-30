@@ -121,7 +121,7 @@ def state_update(action, s_cur, sg):
     new = [0] * 64
     for index in range(0,64):
         if effect(action, index, s_cur, sg) == 1:  # positive effect
-            new[index] = pi_g(action, s_cur[0]) +(1-pi_g(action, s_cur[0])*s_cur[0][index])
+            new[index] = pi_g(action, s_cur[0]) +(1-pi_g(action, s_cur[0]))*s_cur[0][index]
         elif effect(action, index, s_cur, sg) == -1: # negative effect
             new[index] = s_cur[0][index] - pi_g(action, s_cur[0])
         else: # non effect
@@ -162,16 +162,20 @@ def continous_planner(s0, sg):
         
         for k in range(0,length):
 
-            s_cur = states.pop(k)
+            s_cur = states.pop(0)
 
-            if s_cur == sg:
+            if distance(s_cur[0],sg) == 0:
                 finished = True
                 break
 
             action_list = [] 
             for action in actions:
-                action_list.append(action)
                 p_a = pi_g(action, s_cur[0])
+                action_list.append((action, p_a))
+            action_list = sorted(action_list, key=lambda x: x[1])
+
+            for action in action_list:
+                action = action[0]
                 s_new = state_update(action, s_cur, sg)
                 states.append(s_new)
 
@@ -197,7 +201,7 @@ if __name__ == "__main__":
         print(f"Goal: {env.vector_to_natural_language(goal)}")
         while not done and step < 30:
             step += 1
-            action = continous_planner(obs, goal)
+            action = continous_planner(obs.tolist(), goal.tolist())
             print(f"---------- step {step} ----------")
             print(f"Action: {action}")
             next_obs, goal, done, reward, info = env.step(action)
