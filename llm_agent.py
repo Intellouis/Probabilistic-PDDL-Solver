@@ -35,9 +35,7 @@ def prompt(history, goal_description):
     pre_prompt += "I will explain the PDDL language first: \n"
     pre_prompt += "There are 8 blocks, numbered from 1 to 8. \n"
     pre_prompt += "We use 2 predicates to describe a state: On (i, j) and Clear (i). \n"
-    pre_prompt += "On (i, j) means block i is above block j (1 <= i, j <= 8). This means two cases: \n"
-    pre_prompt += "1. Block i is just right on the top of block j (block is next to block j); \n"
-    pre_prompt += "2. There exists some block k, such that block i is on the top of block k, and block k is on the top of block j. \n"
+    pre_prompt += "On (i, j) means block i is on the top of block j (1 <= i, j <= 8). \n"
     pre_prompt += "Clear (i) means there are no other blocks on the top of block i (1 <= i <= 8). \n"
     pre_prompt += "Given a state described by several predicates, you should output the next action. \n"
     pre_prompt += "The action is in the form of 'put i on j', where 1 <= i, j <= 8. \n"
@@ -67,6 +65,7 @@ def post_process(action):
 if __name__ == "__main__":
     env = TextWorld()
     tasks = np.load("./tasks.npy")
+    cnt = 0
     for episode in range(2000):
         print(f"task {episode}")
         env.set_task(tasks[episode])
@@ -76,7 +75,7 @@ if __name__ == "__main__":
         print(f"State: {init_description}")
         print(f"Goal: {env.vector_to_natural_language(goal)}")
         history = History(init_description)
-        while not done and step < 30:
+        while not done and step < 7:
             step += 1
             pre_prompt, post_prompt = prompt(history=history.get_history(), goal_description=env.vector_to_natural_language(goal))
             action = llm(pre_prompt + post_prompt)
@@ -91,4 +90,6 @@ if __name__ == "__main__":
             obs = next_obs
         if done:
             print(f">>>>>>>>>>>>>>>>>>>>> done!")
+            cnt += 1
+        print(f"success times {cnt} / {episode+1}")
     env.close()
