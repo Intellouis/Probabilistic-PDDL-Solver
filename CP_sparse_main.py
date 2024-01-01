@@ -20,14 +20,14 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
     env = TextWorld()
-    tasks = np.load("./tasks.npy")
-    with open("./goal_set_2000.pkl", "rb") as f:
+    tasks = np.load("./dataset/tasks.npy")
+    with open("./dataset/goal_set_2000.pkl", "rb") as f:
         goal_set = pickle.load(f)
     goal_list = goal_set["data"]
     # tasks = goal_set["labels"]
     encoder = Encoder(NUM_BLOCKS*2, 128, VECTOR_LENGTH).to(device)
     if args.continuous:
-        state_dict = torch.load("./OSIL_state_dict_200.pth", map_location="cpu")
+        state_dict = torch.load("./model/OSIL_state_dict_200.pth", map_location="cpu")
         encoder.load_state_dict(state_dict)
         
     success_cnt = 0
