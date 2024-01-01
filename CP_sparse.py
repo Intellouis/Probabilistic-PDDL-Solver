@@ -78,6 +78,20 @@ def distance(sa, sb):
     
     return ret
 
+def L1(sa, sb):
+    """
+    Calcute L1 distance of current state and goal state.
+
+    input:
+    - sa, sb: 64-dimensional vector representing symbolic states
+
+    output:
+    - ret: Euclidean distance of both vectors
+    """
+    ret = np.sum(np.abs(sa - sb))
+
+    return ret
+
 def effect(action, index, s_c=None, s_g=None):
     """
     Determine the type (positive, negative, irrelevant) of ground atom after action is executed.
@@ -179,10 +193,16 @@ def state_update(action, s_c):
         label = effect(action, index)
         if label == 1:  # positive effect
             s_new[index] = p_a + (1 - p_a) * s_c[index]
+            s_new[index] = max(0, s_new[index])
+            s_new[index] = min(1, s_new[index])
         elif label == -1: # negative effect
             s_new[index] = s_c[index] - p_a
+            s_new[index] = max(0, s_new[index])
+            s_new[index] = min(1, s_new[index])
         else: # non effect
             s_new[index] = s_c[index]
+            # s_new[index] = max(0, s_new[index])
+            # s_new[index] = min(1, s_new[index])
         
     return s_new
 
@@ -192,7 +212,7 @@ def state_update(action, s_c):
 #         0-55 are On(1, 2), On(1, 3), ... ,On(8, 7); 56-63 are Clear(1),..., Clear(8)
 # output - a list of actions like "pick_1_on_2"
 
-def ranking(s_p, s_c, s_g, action, gamma=0.5):
+def ranking(s_p, s_c, s_g, action, gamma=1.):
     """
     Ranking current states with distance and applicability.
 
@@ -214,57 +234,85 @@ def ranking(s_p, s_c, s_g, action, gamma=0.5):
     return score
 
 class State:
-    def __init__(self, s_p, s_c, actions):
+    def __init__(self, s_p, s_c, actions, d_c):
         self.s_p = s_p
         self.s_c = s_c
         self.actions = actions
+        self.layer_num = len(actions)
+        # self.d_p = d_p
+        self.d_c = d_c
 
-def continous_planner(s_0, s_g):
+def clip(states):
+    """
+    Transform continuous vector into discrete vector via clipping.
+    """
+    states = np.where(states >= 0.5, 1., 0.)
+    return states
+
+def continous_planner(s_0, s_g, if_clip=False):
     """Continuous Planner"""
+
+    if if_clip:
+        s_0 = clip(s_0)
+        s_g = clip(s_g)
+        max_l = L1(s_0, s_g)
+    else:
+        max_l = L1(clip(s_0), clip(s_g))
+
     Pi = [] # action list to return
+    max_d = distance(s_0, s_g)
+    layer_num = int(max_l / 2)
     clip_num = 5 # max number of children
-    layer_num = 6 # layer number of search
-    root = State(s_0, s_0, []) # (s_p, s_c, action_history[])
-    finished = False # searching finished
-    mmax = 1e9
-    threshold = 1
+    # layer_num = 6 # layer number of search
+    root = State(s_0, s_0, [], max_d) # (s_p, s_c, action_history[], d_c)
+    # finished = False # searching finished
+    # mmax = 1e9
+    # threshold = max_d / layer_num
 
     queue = Queue()
     queue.put(root)
     start_time = time.time()
     while not queue.empty():
         
-        if queue.qsize() == clip_num ** layer_num:
-            break
+        # if queue.qsize() == clip_num ** layer_num:
+        #     break
 
-        if mmax <= threshold:
-            break
+        # if mmax <= threshold:
+        #     break
 
         state = queue.get()
+        layer = state.layer_num
+        if layer >= layer_num:
+            break
+
         new_state_list = []
         for action in actions:
             # add action to action list
+            s_new = state_update(action, state.s_c)
+            d_c = distance(s_new, s_g)
+            if d_c > max_d or d_c > state.d_c:
+                continue
             plan = copy.deepcopy(state.actions)
             plan.append(action)
-            s_new = state_update(action, state.s_c)
-            state_new = State(s_p=state.s_c, s_c=s_new, actions=plan)
+            state_new = State(s_p=state.s_c, s_c=s_new, actions=plan, d_c=d_c)
             new_state_list.append(state_new)
         # print(len(new_state_list))
         new_state_list = sorted(new_state_list, key=lambda x: ranking(s_p=x.s_p, s_c=x.s_c, s_g=s_g, action=x.actions[-1]))
         new_state_list = new_state_list[:clip_num]
         
-        min_dis = 1e9
+        # min_dis = 1e9
         for new_state in new_state_list:
             queue.put(new_state)
-            min_dis = min(min_dis, distance(new_state.s_c, s_g))
+            # min_dis = min(min_dis, new_state.d_c)
 
-        mmax = min(mmax, min_dis)
+        # mmax = min(mmax, min_dis)
 
 
     t = time.time() - start_time
     print(f"Planning Time: {t}s") 
 
     length = queue.qsize()
+    # print(length)
     state_list = [queue.get() for _ in range(length)]
     choose_state = sorted(state_list, key=lambda x: distance(x.s_c, s_g))[0]
     Pi = choose_state.actions
