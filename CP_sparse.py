@@ -16,7 +16,7 @@ import copy
 import numpy as np
 from queue import Queue
 import time
-# from TextWorld import TextWorld
+from TextWorld import TextWorld
 
 NUM_BLOCKS = 8
 
@@ -309,6 +309,10 @@ def continous_planner(s_0, s_g, if_clip=False):
         mmax = min(mmax, min_dis)
         # print(mmax)
 
+        if queue.empty():
+            queue.put(state)
+            break
+
 
     t = time.time() - start_time
     print(f"Planning Time: {t}s") 
@@ -318,6 +322,8 @@ def continous_planner(s_0, s_g, if_clip=False):
     state_list = [queue.get() for _ in range(length)]
     choose_state = sorted(state_list, key=lambda x: distance(x.s_c, s_g))[0]
     Pi = choose_state.actions
+    # print(clip(choose_state.s_c))
+    # print(clip(s_g))
     print(f"Pi: {Pi}")
 
     return Pi
