@@ -20,6 +20,18 @@ import time
 NUM_BLOCKS = 8
 
 
+"""---------------------!!!!!Notable!!!!!-----------------------"""
+ACTIONS = []
+for i in range(1,9):
+    for j in range(1,9):
+        if i == j:
+            continue
+        string = "put " + str(i) + " on " + str(j)
+        ACTIONS.append(string)
+#['put 1 on 2', 'put 1 on 3', ..., 'put 2 on 1',...,'put 8 on 7']
+"""---------------------!!!!!Notable!!!!!-----------------------"""
+
+
 def ij2k(i, j):
     """
     Mapping block index to state index.
@@ -165,16 +177,6 @@ def pi_g(action, s_c):
     p_a = s_c[56+g1] * s_c[56+g2]
     return p_a
 
-actions = []
-for i in range(1,9):
-    for j in range(1,9):
-        if i == j:
-            continue
-        string = "put " + str(i) + " on " + str(j)
-        actions.append(string)
-#['put 1 on 2', 'put 1 on 3', ..., 'put 2 on 1',...,'put 8 on 7']
-        
-
 def state_update(action, s_c):
     """
     Distribution of ground atoms shifts after applying action.
@@ -263,11 +265,11 @@ def continous_planner(s_0, s_g, if_clip=False):
     layer_num = int(max_l / 2)
     clip_num = 6 # max number of children
     # layer_num = 6 # layer number of search
+    state = None
     root = State(s_0, s_0, [], max_d) # (s_p, s_c, action_history[], d_c)
     # finished = False # searching finished
     mmax = 1e9
     # threshold = 0.1
-
     queue = Queue()
     queue.put(root)
     start_time = time.time()
@@ -286,7 +288,7 @@ def continous_planner(s_0, s_g, if_clip=False):
             break
 
         new_state_list = []
-        for action in actions:
+        for action in ACTIONS:
             # add action to action list
             s_new = state_update(action, state.s_c)
             d_c = distance(s_new, s_g)
@@ -308,10 +310,8 @@ def continous_planner(s_0, s_g, if_clip=False):
         mmax = min(mmax, min_dis)
         # print(mmax)
 
-        if queue.empty():
-            queue.put(state)
-            break
-
+    if queue.empty():
+        queue.put(state)
 
     t = time.time() - start_time
     print(f"Planning Time: {t}s") 
@@ -326,3 +326,4 @@ def continous_planner(s_0, s_g, if_clip=False):
     print(f"Pi: {Pi}")
 
     return Pi
+
