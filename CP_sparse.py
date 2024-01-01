@@ -262,11 +262,11 @@ def continous_planner(s_0, s_g, if_clip=False):
     Pi = [] # action list to return
     max_d = distance(s_0, s_g)
     layer_num = int(max_l / 2)
-    clip_num = 56 # max number of children
+    clip_num = 6 # max number of children
     # layer_num = 6 # layer number of search
     root = State(s_0, s_0, [], max_d) # (s_p, s_c, action_history[], d_c)
     # finished = False # searching finished
-    # mmax = 1e9
+    mmax = 1e9
     # threshold = 0.1
 
     queue = Queue()
@@ -282,6 +282,7 @@ def continous_planner(s_0, s_g, if_clip=False):
 
         state = queue.get()
         layer = state.layer_num
+        # print(layer)
         if layer >= layer_num:
             break
 
@@ -298,14 +299,14 @@ def continous_planner(s_0, s_g, if_clip=False):
             new_state_list.append(state_new)
         # print(len(new_state_list))
         new_state_list = sorted(new_state_list, key=lambda x: ranking(s_p=x.s_p, s_c=x.s_c, s_g=s_g, action=x.actions[-1]))
-        new_state_list = new_state_list[:clip_num]
+        new_state_list = new_state_list[:clip_num-layer]
         
-        # min_dis = 1e9
+        min_dis = 1e9
         for new_state in new_state_list:
             queue.put(new_state)
-            # min_dis = min(min_dis, new_state.d_c)
+            min_dis = min(min_dis, new_state.d_c)
 
-        # mmax = min(mmax, min_dis)
+        mmax = min(mmax, min_dis)
         # print(mmax)
 
 
