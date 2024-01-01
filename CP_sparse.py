@@ -16,7 +16,6 @@ import copy
 import numpy as np
 from queue import Queue
 import time
-from TextWorld import TextWorld
 
 NUM_BLOCKS = 8
 
@@ -327,28 +326,3 @@ def continous_planner(s_0, s_g, if_clip=False):
     print(f"Pi: {Pi}")
 
     return Pi
-
-if __name__ == "__main__":
-    env = TextWorld()
-    tasks = np.load("./tasks.npy")
-    for episode in range(2000):
-        print(f"task {episode}")
-        env.set_task(tasks[episode])
-        obs, goal, done, reward, info = env.reset(next_task=tasks[episode])
-        step = 0
-        init_description = env.state_to_natual_language()
-        print(f"State: {init_description}")
-        print(f"Goal: {env.vector_to_natural_language(goal)}")
-        while not done and step < 30:
-            step += 1
-            action = continous_planner(obs, goal)
-            print(f"---------- step {step} ----------")
-            print(f"Action: {action}")
-            next_obs, goal, done, reward, info = env.step(action)
-            current_state_description = env.state_to_natual_language()
-            print(f"State: {current_state_description}")
-            print(f"Goal: {env.vector_to_natural_language(goal)}")
-            obs = next_obs
-        if done:
-            print(f">>>>>>>>>>>>>>>>>>>>> done!")
-    env.close()
