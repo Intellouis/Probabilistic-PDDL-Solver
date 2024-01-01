@@ -212,7 +212,7 @@ def state_update(action, s_c):
 #         0-55 are On(1, 2), On(1, 3), ... ,On(8, 7); 56-63 are Clear(1),..., Clear(8)
 # output - a list of actions like "pick_1_on_2"
 
-def ranking(s_p, s_c, s_g, action, gamma=1.):
+def ranking(s_p, s_c, s_g, action, gamma=0.5):
     """
     Ranking current states with distance and applicability.
 
@@ -262,12 +262,12 @@ def continous_planner(s_0, s_g, if_clip=False):
     Pi = [] # action list to return
     max_d = distance(s_0, s_g)
     layer_num = int(max_l / 2)
-    clip_num = 5 # max number of children
+    clip_num = 56 # max number of children
     # layer_num = 6 # layer number of search
     root = State(s_0, s_0, [], max_d) # (s_p, s_c, action_history[], d_c)
     # finished = False # searching finished
     # mmax = 1e9
-    # threshold = max_d / layer_num
+    # threshold = 0.1
 
     queue = Queue()
     queue.put(root)
@@ -290,7 +290,7 @@ def continous_planner(s_0, s_g, if_clip=False):
             # add action to action list
             s_new = state_update(action, state.s_c)
             d_c = distance(s_new, s_g)
-            if d_c > max_d or d_c > state.d_c:
+            if d_c >= max_d or d_c >= state.d_c:
                 continue
             plan = copy.deepcopy(state.actions)
             plan.append(action)
@@ -306,6 +306,7 @@ def continous_planner(s_0, s_g, if_clip=False):
             # min_dis = min(min_dis, new_state.d_c)
 
         # mmax = min(mmax, min_dis)
+        # print(mmax)
 
 
     t = time.time() - start_time
