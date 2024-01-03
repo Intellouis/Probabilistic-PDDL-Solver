@@ -50,7 +50,6 @@ if __name__ == "__main__":
                 # embedding_vector = np.where(embedding_vector < 0, 0, embedding_vector)
                 embedding_vector = F.sigmoid(embedding_vector).detach().cpu().numpy()
                 
-
                 # print(f"S_cur: {clip(embedding_vector)} \n")
                 # print(f"S_g: {clip(embedding_goal)} \n")
 
