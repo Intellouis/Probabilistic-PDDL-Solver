@@ -31,7 +31,7 @@ if __name__ == "__main__":
         encoder.load_state_dict(state_dict)
         
     success_cnt = 0
-    for episode in range(50, 2000):
+    for episode in range(0, 2000):
         print(f"task {episode}")
         env.set_task(tasks[episode])
         obs, goal, done, reward, info = env.reset(next_task=tasks[episode])
