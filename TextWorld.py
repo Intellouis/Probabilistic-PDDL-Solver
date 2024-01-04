@@ -82,7 +82,7 @@ class TextWorld:
                 idx += 1
                 if vector[idx] == 1:
                     # print(f"On({i}, {j})")
-                    natural_language += f"On({i}, {j}), "
+                    natural_language += f"On({i+1}, {j+1}), "
         for k in range(56, 64):
             if vector[k] == 1:
                 # print(f"Clear({k - 56})")
@@ -100,7 +100,8 @@ class TextWorld:
                     # On(obj_i, obj_j)
                     obj_i = matrix_state[i][j+1]
                     obj_j = matrix_state[i][j]
-                    idx = self.ij2k(obj_i-1, obj_j-1)  # should be?
+
+                    idx = self.ij2k(obj_i - 1, obj_j - 1)
                     vector[idx] = 1
                 elif matrix_state[i][j] != 0 and matrix_state[i][j+1] == 0:
                     # Clear(obj_i)
@@ -110,6 +111,15 @@ class TextWorld:
                     break
         return vector
     
+    def state_to_coordinate(self):
+        coordinate = np.zeros((NUM_BLOCKS, 2), dtype=float)
+        for number in range(1, 9):
+            xs, ys = np.where(self.matrix_state == number)
+            x, y = xs[0], ys[0]
+            coordinate[number-1][0] = x
+            coordinate[number-1][1] = y
+        return coordinate
+
     # def vector_to_state(self, vector):
     #     matrix_state = np.zeros((NUM_BLOCKS, NUM_BLOCKS+1), dtype=int)
     #     for i in range(56, 64):
