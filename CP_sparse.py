@@ -314,7 +314,7 @@ def continous_planner(s_0, s_g, if_clip=False):
         queue.put(state)
 
     t = time.time() - start_time
-    print(f"Planning Time: {t}s") 
+    # print(f"Planning Time: {t}s") 
 
     length = queue.qsize()
     # print(length)
@@ -323,7 +323,7 @@ def continous_planner(s_0, s_g, if_clip=False):
     Pi = choose_state.actions
     # print(clip(choose_state.s_c))
     # print(clip(s_g))
-    print(f"Pi: {Pi}")
+    # print(f"Pi: {Pi}")
 
     return Pi
 
