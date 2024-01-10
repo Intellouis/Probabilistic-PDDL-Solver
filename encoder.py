@@ -26,30 +26,42 @@ class MLP(nn.Module):
         self.optimizer.zero_grad()
         output = self(input)
         target = torch.autograd.Variable(target, requires_grad=False)
-        # loss = F.mse_loss(output, target)
-        # loss = F.binary_cross_entropy_with_logits(output, target)
-        # loss = torchvision.ops.sigmoid_focal_loss(output, target, reduction="sum")
-        loss = F.binary_cross_entropy_with_logits(output, target)           # I'm not sure about this loss function      tensor(0.7052)  ('loss.size()' is ())
-        # loss = torch.autograd.Variable(loss, requires_grad=True)
-        # loss.require_grad_(True)
+        loss = F.binary_cross_entropy_with_logits(output, target)
         loss.backward()
         self.optimizer.step()
         return loss.item()
+    
 
-# class MLP_sigmoid(nn.Module):
-#     def __init__(self, input_size, hidden_size, output_size):
-#         super().__init__()
-#         self.input_size = input_size
-#         self.hidden_size = hidden_size
-#         self.output_size = output_size
+class Deep_MLP(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, lr=0.001):
+        super(Deep_MLP, self).__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
         
-#         self.fc1 = nn.Linear(input_size, hidden_size)
-#         self.fc2 = nn.Linear(hidden_size, output_size)
+        self.fc1 = nn.Linear(input_size, 64)
+        self.fc2 = nn.Linear(64, 128)
+        self.fc3 = nn.Linear(128, 256)
+        self.fc4 = nn.Linear(256, output_size)
+
+        self.optimizer = optim.Adam(self.parameters(), lr=lr)
         
-#     def forward(self, input):
-#         output = F.relu(self.fc1(input))
-#         output = self.fc2(output)
-#         return F.sigmoid(output)
+    def forward(self, input):
+        output = F.relu(self.fc1(input))
+        output = F.relu(self.fc2(output))
+        output = F.relu(self.fc3(output))
+        output = self.fc4(output)
+        return output
+    
+    def train(self, input, target):
+        self.optimizer.zero_grad()
+        output = self(input)
+        target = torch.autograd.Variable(target, requires_grad=False)
+        loss = F.binary_cross_entropy_with_logits(output, target)
+        loss.backward()
+        self.optimizer.step()
+        return loss.item()
+    
     
 class Encoder(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, lr=0.001):
@@ -66,14 +78,12 @@ class Encoder(nn.Module):
         self.model_6 = MLP(input_size, hidden_size, output_size)
         self.model_7 = MLP(input_size, hidden_size, output_size)
         self.model_8 = MLP(input_size, hidden_size, output_size)
-        # self.model_on = MLP_sigmoid(2 * output_size, hidden_size, 1)
-        # self.model_clear = MLP_sigmoid(output_size, hidden_size, 1)
+        
         self.model_on = MLP(2 * output_size, hidden_size, 1)
         self.model_clear = MLP(output_size, hidden_size, 1)
         self.optimizer = optim.Adam(self.parameters(), lr=lr)
 
     def forward(self, input):
-        # print("input.size()", input.size())         # (1, 24)
         block_embedding = []
         block_embedding.append(self.model_1(input))
         block_embedding.append(self.model_2(input))
@@ -83,25 +93,18 @@ class Encoder(nn.Module):
         block_embedding.append(self.model_6(input))
         block_embedding.append(self.model_7(input))
         block_embedding.append(self.model_8(input)) 
-        # print("block_embedding[-1].size()", block_embedding[-1].size())         # (1, 64)
-        # predicate: on & clear
+        
         output = []
-        # output = torch.Tensor(64)
         idx = -1
         for i in range(8):
             for j in range(8):
                 if i == j:
                     continue
                 idx += 1
-                output.append(self.model_on(torch.cat((block_embedding[i], block_embedding[j]), dim=1)))#.squeeze(0))
-                # output[idx] = self.model_on(torch.cat((block_embedding[i], block_embedding[j]), dim=1)).squeeze(0)
+                output.append(self.model_on(torch.cat((block_embedding[i], block_embedding[j]), dim=1)))
         for i in range(8):
-            output.append(self.model_clear(block_embedding[i]))#.squeeze(0))
-            # output[56+i] = self.model_clear(block_embedding[i]).squeeze(0)
-        # print("output[-1].size()", output[-1].size())            # (1,)
-        # output = torch.Tensor(output)
+            output.append(self.model_clear(block_embedding[i]))
         output = torch.cat(output, dim=1)
-        # print("output.size()", output.size())                    # (64,)
         return output
 
 
@@ -111,12 +114,7 @@ class Encoder(nn.Module):
         self.optimizer.zero_grad()
         output = self(input)
         target = torch.autograd.Variable(target, requires_grad=False)
-        # loss = F.mse_loss(output, target)
-        # loss = F.binary_cross_entropy_with_logits(output, target)
-        # loss = torchvision.ops.sigmoid_focal_loss(output, target, reduction="sum")
-        loss = F.binary_cross_entropy_with_logits(output, target)           # I'm not sure about this loss function      tensor(0.7052)  ('loss.size()' is ())
-        # loss = torch.autograd.Variable(loss, requires_grad=True)
-        # loss.require_grad_(True)
+        loss = F.binary_cross_entropy_with_logits(output, target)
         loss.backward()
         self.optimizer.step()
         return loss.item()
