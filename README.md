@@ -2,6 +2,16 @@
 
 This is the repository for PKU CoRe 2023 Fall Course Project: Probabilistic PDDL Solver (Track of Abstract Reasoning).
 
+## Installation
+First clone this repo:
+```
+git clone https://github.com/Intellouis/Probabilistic-PDDL-Solver
+```
+After creating a virtual (conda) environment, please install the requirements and prerequisites:
+```
+pip install -r requirements.txt
+```
+
 ## Environment
 
 Following [NTP Vat Release](https://github.com/StanfordVL/NTP-vat-release/tree/master), we implement a lightweight environment of block stacking.
@@ -14,12 +24,15 @@ Following [NTP Vat Release](https://github.com/StanfordVL/NTP-vat-release/tree/m
 - Goal space: We also use a 64-dimensional vector to represent the goal state, in which 8 elements are 1 exactly. In each step of a trajectory, the goal vector is used to determine whether the goal has been reached (whether the task is finished).
 - Tasks: We provide 2000 different tasks, which are obtained from [Neural Task Programming: Learning to Generalize Across Hierarchical Tasks](https://arxiv.org/abs/1710.01813). Each task has a unique goal, forming a diverse set of test cases.
 
+### Datasets and Tasks
+All the datasets (sampled from our environment using an expert policy) are listed in ```/dataset/```. 
+
 
 ## PDDL Solvers
 
 We implement both the SGN-based PDDL Solver and the LLM-agent (baseline). The LLM-agent is based on GPT-4-11.6-preview.
 
-
+our trained checkpoints are listed in ```/model/```.
 
 
 
