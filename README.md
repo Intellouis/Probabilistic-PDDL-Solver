@@ -2,6 +2,8 @@
 
 This is the repository for PKU CoRe 2023 Fall Course Project: Probabilistic PDDL Solver (Track of Abstract Reasoning).
 
+![](image/pipeline.png)
+
 ## Installation
 First clone this repo:
 ```
