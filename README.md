@@ -68,5 +68,5 @@ python llm_agent.py
 
 Success curves:
 
-![](fig/left.png)![](fig/right.png)
+![](fig/long.png)
 
