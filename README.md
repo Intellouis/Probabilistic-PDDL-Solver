@@ -34,6 +34,30 @@ We implement both the SGN-based PDDL Solver and the LLM-agent (baseline). The LL
 
 our trained checkpoints are listed in ```/model/```.
 
+### Run Experiments
+
+To train SGN, run:
+```
+python train_SGN.py
+```
+To make inference / test on downstream tasks, run:
+```
+python main.py --continuous 1 --clip 0
+```
+To take the ablation study, in which a clip function is added during the inference process, run:
+```
+python main.py --continuous 1 --clip 1
+```
+To sample data from the environment using expert policy, run:
+```
+python main.py --continuous 0
+```
+To utilize large language models for tackling the challenges in block stacking tasks, run:
+```
+python llm_agent.py
+```
+
+
 
 
 
