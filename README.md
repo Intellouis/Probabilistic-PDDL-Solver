@@ -60,5 +60,10 @@ To utilize large language models for tackling the challenges in block stacking t
 python llm_agent.py
 ```
 
+### Experimental Results
+
+|       | SGN (w/o clip) | SGN (w/ clip) | MLP (w/o clip) | MLP (w/ clip) | LLM-agent |
+|:-----:|:--------------:|:-------------:|:--------------:|:-------------:|:---------:|
+| Success Rate | 86.5% | 76.9% | 56.2% | 36.4% | 52.5% |
 
 
