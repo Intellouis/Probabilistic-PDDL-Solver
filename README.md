@@ -4,7 +4,7 @@ This is the repository for PKU CoRe 2023 Fall Course Project: Probabilistic PDDL
 
 ## Environment
 
-Following [https://github.com/StanfordVL/NTP-vat-release/tree/master](NTP Vat Release), we implement a lightweight environment of block stacking.
+Following [NTP Vat Release](https://github.com/StanfordVL/NTP-vat-release/tree/master), we implement a lightweight environment of block stacking.
 
 ### Environment Introduction and Details
 - Object space: We have 8 blocks, numbered 1 to 8. These blocks are totally same except for numbers.
