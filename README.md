@@ -30,7 +30,7 @@ All the datasets (sampled from our environment using an expert policy) are liste
 
 ## PDDL Solvers
 
-We implement both the SGN-based PDDL Solver and the LLM-agent (baseline). The LLM-agent is based on GPT-4-11.6-preview.
+We implement both the SGN-based PDDL Solver and the LLM-agent (baseline). The LLM-agent is based on ```GPT-4-11.6-preview```.
 
 our trained checkpoints are listed in ```/model/```.
 
