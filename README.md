@@ -15,6 +15,9 @@ Following [NTP Vat Release](https://github.com/StanfordVL/NTP-vat-release/tree/m
 - Tasks: We provide 2000 different tasks, which are obtained from [Neural Task Programming: Learning to Generalize Across Hierarchical Tasks](https://arxiv.org/abs/1710.01813). Each task has a unique goal, forming a diverse set of test cases.
 
 
+## PDDL Solvers
+
+We implement both the SGN-based PDDL Solver and the LLM-agent (baseline). The LLM-agent is based on GPT-4-11.6-preview.
 
 
 
