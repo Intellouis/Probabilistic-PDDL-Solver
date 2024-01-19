@@ -64,7 +64,7 @@ python llm_agent.py
 
 |                  | SGN (w/o clip) | SGN (w/ clip) | MLP (w/o clip) | MLP (w/ clip) | LLM-agent |
 |:----------------:|:--------------:|:-------------:|:--------------:|:-------------:|:---------:|
-| **Success Rate** |     86.5%      |     76.9%     |     56.2%      |     36.4%     |   52.5%   |
+| **Success Rate** |       68%      |       45%     |       28%      |      15%      |    45%    |
 
 Success curves:
 
