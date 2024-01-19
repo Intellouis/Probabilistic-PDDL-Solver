@@ -2,7 +2,7 @@
 
 This is the repository for PKU CoRe 2023 Fall Course Project: Probabilistic PDDL Solver (Track of Abstract Reasoning).
 
-![](fig/pipeline.png)
+![](fig/pipeline_new.png)
 
 
 ## Installation
@@ -68,5 +68,5 @@ python llm_agent.py
 
 Success curves:
 
-![](fig/long.png)
+![](fig/long_new.png)
 
