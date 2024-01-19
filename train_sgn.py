@@ -76,7 +76,7 @@ class SGN(nn.Module):
 
 
 if __name__ == '__main__':
-    with open('./dataset/IL_dataset_2000.pkl', 'rb') as f:
+    with open('./dataset/IL_dataset_1900.pkl', 'rb') as f:
         dataset = pickle.load(f)
     X = dataset["data"]
     Y = dataset["labels"]
@@ -92,5 +92,5 @@ if __name__ == '__main__':
             y = train_Y[i:i+BATCH_SIZE].to(device)
             loss = encoder.train(x, y)
         if epoch % 1 == 0:
-            torch.save(encoder.state_dict(), f"./model/all_2000/OSIL_state_dict_{epoch}.pth")
+            torch.save(encoder.state_dict(), f"./model/all_1900/OSIL_state_dict_{epoch}.pth")
         # print(loss)
